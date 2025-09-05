@@ -14,6 +14,7 @@ CN = SunSpecModbusSecurityClient
 
 [ v3_req ]
 keyUsage = critical, digitalSignature, nonRepudiation, keyEncipherment
+extendedKeyUsage = clientAuth
 basicConstraints = CA:FALSE
 
 # SunSpec Role OID: 1.3.6.1.4.1.50316.802.1, value: "ReadOnlySunSpec" as ASN1 UTF8String
