@@ -45,6 +45,15 @@ def test_unimpl_float32_round_trips_to_none():
     # writer meet it.
     assert mb.data_to_f32(mb.create_unimpl_value('float32', len=4)) is None
 
+def test_create_unimpl_value_float64_does_not_raise():
+    # float64 has no entry in unimpl_value, so the None looked up there used to
+    # reach f64_to_data and raise struct.error.
+    assert mb.create_unimpl_value('float64', len=8) == struct.pack('>Q', mb.SUNS_UNIMPL_FLOAT64)
+
+
+def test_unimpl_float64_round_trips_to_none():
+    assert mb.data_to_f64(mb.create_unimpl_value('float64', len=8)) is None
+
 
 def test_data_to_s16():
     assert mb.data_to_s16(b'\x13\x88') == 5000

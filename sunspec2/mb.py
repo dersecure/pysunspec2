@@ -96,6 +96,10 @@ def create_unimpl_value(vtype, len=None):
         # f32_to_data encodes the number 2143289344.0 instead, which reads back
         # as an ordinary value rather than as an unimplemented point.
         return struct.pack('>I', SUNS_UNIMPL_FLOAT32)
+    elif vtype == mdef.TYPE_FLOAT64:
+        # Same reasoning, and float64 has no entry in unimpl_value at all, so
+        # without this the None it looks up reaches f64_to_data and raises.
+        return struct.pack('>Q', SUNS_UNIMPL_FLOAT64)
     return point_type_info[vtype][3](value)
 
 
