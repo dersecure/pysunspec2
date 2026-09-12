@@ -124,6 +124,27 @@ def test_str_to_data():
 def test_eui48_to_data():
     assert mb.eui48_to_data('12:34:56:78:90:AB') == b'\x00\x00\x12\x34\x56\x78\x90\xAB'
 
+def test_eui48_to_data_accepts_length():
+    # Point.get_mb() calls to_data(value, len * 2) for every type, so a to_data
+    # without the length parameter raises TypeError when reached that way.
+    assert mb.eui48_to_data('12:34:56:78:90:AB', 8) == mb.eui48_to_data('12:34:56:78:90:AB')
+
+
+def test_every_to_data_accepts_length():
+    # The uniform (value, len) signature is what Point.get_mb() relies on.
+    values = {
+        'int16': -1, 'uint16': 1, 'acc16': 1, 'enum16': 1, 'bitfield16': 1,
+        'int32': -1, 'uint32': 1, 'acc32': 1, 'enum32': 1, 'bitfield32': 1,
+        'int64': -1, 'uint64': 1, 'acc64': 1,
+        'ipaddr': 1, 'eui48': '12:34:56:78:90:AB',
+        'float32': 1.0, 'string': 'a', 'sunssf': 1, 'pad': 0,
+    }
+    for point_type, value in values.items():
+        info = mb.point_type_info[point_type]
+        # string has no fixed length; any even byte count will do here.
+        length = (info.len or 2) * 2
+        info.to_data(value, length)
+
 
 def test_is_impl_int16():
     assert not mb.is_impl_int16(-32768)
